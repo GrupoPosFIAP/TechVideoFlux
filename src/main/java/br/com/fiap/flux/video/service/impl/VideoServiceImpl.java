@@ -2,6 +2,7 @@ package br.com.fiap.flux.video.service.impl;
 
 import br.com.fiap.flux.enums.Category;
 import br.com.fiap.flux.exception.EntityNotFoundException;
+import br.com.fiap.flux.user.domain.User;
 import br.com.fiap.flux.user.repository.UserRepository;
 import br.com.fiap.flux.utils.CriteriaBuilder;
 import br.com.fiap.flux.video.domain.Video;
@@ -16,9 +17,10 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.UUID;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 @Service
 @RequiredArgsConstructor
@@ -104,5 +106,29 @@ public class VideoServiceImpl implements VideoService {
         user.subscribe(userRepository::save);
 
         return Mono.empty();
+    }
+
+
+
+    /**
+     * O Endpoint Estatísticas deve retornar:
+     * 1- A quantidade total de vídeos (Count - findAll)
+     * 2- A quantidade de vídeos favoritados
+     * 3- Média de visualizações (quantidade de visualizações total / quantidade de vídeos)
+     */
+    @Override
+    public Flux<Integer> estatisticas() {
+
+        Flux<User> users = userRepository.findAll();
+
+        // Quantidade total de vídeos
+        Mono<Long> quantidadeTotal = this.videoRepository.count();
+
+        // Quantidade total de vídeos FAVORITADOS
+
+        var quantidadeFavoritos = counting(users.);
+        var mediaVisualizacoes = averagingInt(Video);
+
+        return Flux.just(quantidadeTotal, quantidadeFavoritos, mediaVisualizacoes);
     }
 }

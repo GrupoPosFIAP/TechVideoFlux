@@ -6,10 +6,10 @@ import br.com.fiap.flux.video.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -52,4 +52,17 @@ public class VideoController {
     public Mono<Void> delete(@PathVariable UUID id) {
         return this.videoService.delete(id);
     }
+
+
+    /**
+     * O Endpoint Estatísticas deve retornar:
+     * 1- A quantidade total de vídeos (Count - findAll)
+     * 2- A quantidade de vídeos favoritados
+     * 3- Média de visualizações (quantidade de visualizações total / quantidade de vídeos)
+     */
+    @GetMapping("/estatisticas")
+    public Flux<Integer> estatisticas() {
+        return this.videoService.estatisticas();
+    }
 }
+

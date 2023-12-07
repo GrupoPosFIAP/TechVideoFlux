@@ -24,4 +24,6 @@ public interface VideoService {
     Mono<Void> favoriteVideo(String userId, UUID videoId);
 
     Flux<Video> recommendations(String userId);
+
+    Flux<Integer> estatisticas();
 }

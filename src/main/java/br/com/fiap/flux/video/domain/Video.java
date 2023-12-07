@@ -24,12 +24,8 @@ public class Video {
     private UUID id = UUID.randomUUID();
 
     private String titulo;
-
     private String descricao;
-
     private String url;
-
     private LocalDate dataPublicacao;
-
     private List<Category> categorias;
 }

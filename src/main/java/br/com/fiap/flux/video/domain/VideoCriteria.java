@@ -17,5 +17,4 @@ public class VideoCriteria {
                 .withDataPublicacao(this.dataPublicacao != null ? this.dataPublicacao : null)
                 .withTitulo(this.titulo != null ? this.titulo : null);
     }
-
 }
