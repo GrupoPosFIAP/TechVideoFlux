@@ -2,9 +2,9 @@ package br.com.fiap.flux.video.service.impl;
 
 import br.com.fiap.flux.enums.Category;
 import br.com.fiap.flux.exception.EntityNotFoundException;
-import br.com.fiap.flux.user.domain.User;
 import br.com.fiap.flux.user.repository.UserRepository;
 import br.com.fiap.flux.utils.CriteriaBuilder;
+import br.com.fiap.flux.video.domain.Estatistica;
 import br.com.fiap.flux.video.domain.Video;
 import br.com.fiap.flux.video.domain.VideoCriteria;
 import br.com.fiap.flux.video.repository.VideoRepository;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.UUID;
 
 import static java.util.stream.Collectors.*;
@@ -87,7 +86,7 @@ public class VideoServiceImpl implements VideoService {
                 })
                 .flatMapMany(Flux::fromIterable);
 
-        return ((VideoRepository) videoRepository).findByCategoriesIn(categories);
+        return ((VideoRepository) videoRepository).findByCategoriasIn(categories);
     }
 
     @Override
@@ -117,18 +116,18 @@ public class VideoServiceImpl implements VideoService {
      * 3- Média de visualizações (quantidade de visualizações total / quantidade de vídeos)
      */
     @Override
-    public Flux<Integer> estatisticas() {
-
-        Flux<User> users = userRepository.findAll();
-
+    public Mono<Estatistica> estatisticas() {
         // Quantidade total de vídeos
-        Mono<Long> quantidadeTotal = this.videoRepository.count();
+        Mono<Long> quantidadeTotal = this.videoRepository.count().flatMap(item -> new Long(item)).;
 
         // Quantidade total de vídeos FAVORITADOS
+        Mono<Long> quantidadeFavoritos = this.videoRepository.countByContadorFavoritosGreaterThan(0L);
 
-        var quantidadeFavoritos = counting(users.);
-        var mediaVisualizacoes = averagingInt(Video);
+        // Quantidade média de visualizações
+//        Mono<Long> mediaVisualizacoes = this.videoRepository.countAllByContadorVisualizacoes();
 
-        return Flux.just(quantidadeTotal, quantidadeFavoritos, mediaVisualizacoes);
+        Estatistica estatistica = new Estatistica();
+        return Mono.just(estatistica).doOnNext(e -> e.setMediaVisualizacoes(quantidadeTotal));
+
     }
 }

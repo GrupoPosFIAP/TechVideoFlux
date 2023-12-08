@@ -28,4 +28,6 @@ public class Video {
     private String url;
     private LocalDate dataPublicacao;
     private List<Category> categorias;
+    private Long contadorFavoritos;
+    private Long contadorVisualizacoes;
 }

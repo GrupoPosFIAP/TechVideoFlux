@@ -1,5 +1,6 @@
 package br.com.fiap.flux.video.controller;
 
+import br.com.fiap.flux.video.domain.Estatistica;
 import br.com.fiap.flux.video.domain.Video;
 import br.com.fiap.flux.video.domain.VideoCriteria;
 import br.com.fiap.flux.video.service.VideoService;
@@ -9,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.UUID;
@@ -61,7 +61,7 @@ public class VideoController {
      * 3- Média de visualizações (quantidade de visualizações total / quantidade de vídeos)
      */
     @GetMapping("/estatisticas")
-    public Flux<Integer> estatisticas() {
+    public Mono<Estatistica> estatisticas() {
         return this.videoService.estatisticas();
     }
 }

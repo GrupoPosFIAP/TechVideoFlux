@@ -14,7 +14,9 @@ import java.util.UUID;
 public interface VideoRepository extends ReactiveMongoRepository<Video, UUID>,
         ReactiveQueryByExampleExecutor<Video> {
 
-    Flux<Video> findByCategoriesIn(Flux<Category> categories);
+    Flux<Video> findByCategoriasIn(Flux<Category> categories);
 
-    Mono<Long> countBy
+    Mono<Long> countByContadorFavoritosGreaterThan(Long quantity);
+
+    Mono<Long> countAllByContadorVisualizacoes();
 }
