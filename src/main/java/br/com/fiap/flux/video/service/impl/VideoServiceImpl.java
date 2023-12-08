@@ -117,17 +117,23 @@ public class VideoServiceImpl implements VideoService {
      */
     @Override
     public Mono<Estatistica> estatisticas() {
-        // Quantidade total de vídeos
-        Mono<Long> quantidadeTotal = this.videoRepository.count().flatMap(item -> new Long(item)).;
-
-        // Quantidade total de vídeos FAVORITADOS
-        Mono<Long> quantidadeFavoritos = this.videoRepository.countByContadorFavoritosGreaterThan(0L);
-
-        // Quantidade média de visualizações
-//        Mono<Long> mediaVisualizacoes = this.videoRepository.countAllByContadorVisualizacoes();
-
+//        // Quantidade total de vídeos
+        Flux<Video> quantidadeTotal = this.videoRepository.findAll();
         Estatistica estatistica = new Estatistica();
-        return Mono.just(estatistica).doOnNext(e -> e.setMediaVisualizacoes(quantidadeTotal));
+
+        return quantidadeTotal.collectList().map(videos -> {
+            estatistica.setQuantidadeVideos(videos.size());
+            estatistica.setQuantidadeVideosFavoritos(videos.stream()
+                    .filter(video -> video.getContadorFavoritos() != null && video.getContadorFavoritos() > 0)
+                    .count());
+
+            Long mediaVisualizacoes = Math.round(videos.stream()
+                    .mapToLong(video -> video.getContadorVisualizacoes() == null ? 0L : video.getContadorVisualizacoes())
+                    .average().orElse(0L));
+
+            estatistica.setMediaVisualizacoes(mediaVisualizacoes);
+            return estatistica;
+        });
 
     }
 }

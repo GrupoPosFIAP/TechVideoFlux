@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Estatistica {
 
-    private Long quantidadeVideos;
+    private Integer quantidadeVideos;
     private Long quantidadeVideosFavoritos;
     private Long mediaVisualizacoes;
 
