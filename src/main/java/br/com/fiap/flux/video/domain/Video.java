@@ -20,6 +20,7 @@ import java.util.UUID;
 public class Video {
 
     @Id
+    @Builder.Default
     @MongoId(FieldType.STRING)
     private UUID id = UUID.randomUUID();
 

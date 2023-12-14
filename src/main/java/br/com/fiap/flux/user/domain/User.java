@@ -37,6 +37,7 @@ public class User {
     @Version
     private Long version;
 
+    @Builder.Default
     private Boolean delete = Boolean.FALSE;
 
     private String name;

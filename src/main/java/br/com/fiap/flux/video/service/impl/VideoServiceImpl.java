@@ -85,7 +85,7 @@ public class VideoServiceImpl implements VideoService {
                 })
                 .flatMapMany(Flux::fromIterable);
 
-        return ((VideoRepository) videoRepository).findByCategoriesIn(categories);
+        return ((VideoRepository) videoRepository).findByCategoriasIn(categories);
     }
 
     @Override
