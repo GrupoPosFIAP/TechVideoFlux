@@ -1,14 +1,16 @@
 package br.com.fiap.flux.user.service.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import br.com.fiap.flux.exception.EntityNotFoundException;
 import br.com.fiap.flux.user.domain.User;
+import br.com.fiap.flux.user.mapper.UserMapper;
 import br.com.fiap.flux.user.repository.UserRepository;
 import br.com.fiap.flux.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
@@ -16,6 +18,8 @@ import reactor.core.publisher.Mono;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
+
+    private final UserMapper userMapper;
 
     @Override
     public Mono<User> create(User user) {
@@ -27,8 +31,8 @@ public class UserServiceImpl implements UserService {
         return repository
                 .findById(id)
                 .flatMap(outdated -> {
-                    var updated = outdated.update(toUpdate);
-                    return repository.save(updated);
+                    userMapper.updatePartial(outdated, toUpdate);
+                    return repository.save(outdated);
                 })
                 .switchIfEmpty(Mono.error(EntityNotFoundException::new));
     }
@@ -39,8 +43,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Flux<User> findAll(Pageable pageable) {
-        return repository.findAll();
+    public Mono<Page<User>> findAll(Pageable pageable) {
+        return repository
+            .findByIdNotNull(pageable)
+            .collectList()
+            .zipWith(repository.count())
+            .map(tuple -> new PageImpl<>(tuple.getT1(), pageable, tuple.getT2()));
     }
 
     @Override

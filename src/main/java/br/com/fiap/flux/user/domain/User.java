@@ -1,14 +1,24 @@
 package br.com.fiap.flux.user.domain;
 
-import br.com.fiap.flux.video.domain.Video;
-import lombok.*;
-import org.springframework.data.annotation.*;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.util.StringUtils;
-
 import java.time.LocalDateTime;
 import java.util.List;
+
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.Version;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import br.com.fiap.flux.video.domain.Video;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Data
 @Getter
@@ -46,25 +56,4 @@ public class User {
     private String email;
 
     private List<Video> favorites;
-
-    public User update(User toUpdate) {
-
-        var name = toUpdate.getName();
-        if(StringUtils.hasText(name)) {
-            this.name = name;
-        }
-
-        var email = toUpdate.getEmail();
-        if(StringUtils.hasText(email)) {
-            this.email = email;
-        }
-
-        var favorites = toUpdate.getFavorites();
-        if(null != toUpdate.getFavorites() && !favorites.isEmpty()) {
-            this.favorites = favorites;
-        }
-
-        return this;
-    }
-
 }

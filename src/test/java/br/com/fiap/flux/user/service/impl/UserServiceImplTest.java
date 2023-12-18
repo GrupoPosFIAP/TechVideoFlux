@@ -1,20 +1,27 @@
 package br.com.fiap.flux.user.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 
 import java.util.List;
 import java.util.UUID;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import br.com.fiap.flux.user.domain.User;
+import br.com.fiap.flux.user.mapper.UserMapper;
+import br.com.fiap.flux.user.mapper.UserMapperImpl;
 import br.com.fiap.flux.user.repository.UserRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -27,6 +34,12 @@ public class UserServiceImplTest {
 
     @Mock
     private UserRepository repository;
+
+    @BeforeEach
+    private void initTests() {
+        UserMapper mapper = new UserMapperImpl();
+        userService = new UserServiceImpl(repository, mapper);
+    }
     
     @Test
     void testCreate() {
@@ -68,9 +81,14 @@ public class UserServiceImplTest {
 
         var list = Flux.fromIterable(List.of(one, two, three));
 
-        doReturn(list).when(repository).findAll();
+        var page = new PageImpl<User>(List.of(one, two, three));
 
-        assertEquals(list, userService.findAll(Pageable.ofSize(1)));
+        var expected = Mono.just(page);
+
+        doReturn(list).when(repository).findByIdNotNull(any(Pageable.class));
+        doReturn(Mono.just(3l)).when(repository).count();
+
+        assertEquals(expected.block().getContent(), userService.findAll(PageRequest.of(0, 10, Sort.by("name"))).block().getContent());
     }
 
     @Test
@@ -78,7 +96,7 @@ public class UserServiceImplTest {
         var id = UUID.randomUUID().toString();
         User outdated = User.builder().name("outdated").build();
         User toUpdate = User.builder().email("updated@email.com").build();
-        User updated = outdated.update(toUpdate);
+        User updated = User.builder().name(outdated.getName()).email(toUpdate.getEmail()).build();
 
         doReturn(Mono.just(outdated)).when(repository).findById(id);
         doReturn(Mono.just(updated)).when(repository).save(updated);
