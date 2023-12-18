@@ -4,6 +4,7 @@ import br.com.fiap.flux.enums.Category;
 import br.com.fiap.flux.exception.EntityNotFoundException;
 import br.com.fiap.flux.user.repository.UserRepository;
 import br.com.fiap.flux.utils.CriteriaBuilder;
+import br.com.fiap.flux.video.domain.Estatistica;
 import br.com.fiap.flux.video.domain.Video;
 import br.com.fiap.flux.video.domain.VideoCriteria;
 import br.com.fiap.flux.video.repository.VideoRepository;
@@ -18,7 +19,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.UUID;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.*;
 
 @Service
 @RequiredArgsConstructor
@@ -104,5 +105,35 @@ public class VideoServiceImpl implements VideoService {
         user.subscribe(userRepository::save);
 
         return Mono.empty();
+    }
+
+
+
+    /**
+     * O Endpoint Estatísticas deve retornar:
+     * 1- A quantidade total de vídeos (Count - findAll)
+     * 2- A quantidade de vídeos favoritados
+     * 3- Média de visualizações (quantidade de visualizações total / quantidade de vídeos)
+     */
+    @Override
+    public Mono<Estatistica> estatisticas() {
+//        // Quantidade total de vídeos
+        Flux<Video> quantidadeTotal = this.videoRepository.findAll();
+        Estatistica estatistica = new Estatistica();
+
+        return quantidadeTotal.collectList().map(videos -> {
+            estatistica.setQuantidadeVideos(videos.size());
+            estatistica.setQuantidadeVideosFavoritos(videos.stream()
+                    .filter(video -> video.getContadorFavoritos() != null && video.getContadorFavoritos() > 0)
+                    .count());
+
+            Long mediaVisualizacoes = Math.round(videos.stream()
+                    .mapToLong(video -> video.getContadorVisualizacoes() == null ? 0L : video.getContadorVisualizacoes())
+                    .average().orElse(0L));
+
+            estatistica.setMediaVisualizacoes(mediaVisualizacoes);
+            return estatistica;
+        });
+
     }
 }

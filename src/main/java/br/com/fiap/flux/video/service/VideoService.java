@@ -1,5 +1,6 @@
 package br.com.fiap.flux.video.service;
 
+import br.com.fiap.flux.video.domain.Estatistica;
 import br.com.fiap.flux.video.domain.Video;
 import br.com.fiap.flux.video.domain.VideoCriteria;
 import org.springframework.data.domain.PageImpl;
@@ -24,4 +25,6 @@ public interface VideoService {
     Mono<Void> favoriteVideo(String userId, UUID videoId);
 
     Flux<Video> recommendations(String userId);
+
+    Mono<Estatistica> estatisticas();
 }

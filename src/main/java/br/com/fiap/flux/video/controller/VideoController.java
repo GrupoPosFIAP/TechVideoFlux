@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.fiap.flux.video.domain.Estatistica;
 import br.com.fiap.flux.video.domain.Video;
 import br.com.fiap.flux.video.domain.VideoCriteria;
 import br.com.fiap.flux.video.service.VideoService;
@@ -61,4 +62,17 @@ public class VideoController {
     public Mono<Void> delete(@PathVariable UUID id) {
         return this.videoService.delete(id);
     }
+
+
+    /**
+     * O Endpoint Estatísticas deve retornar:
+     * 1- A quantidade total de vídeos (Count - findAll)
+     * 2- A quantidade de vídeos favoritados
+     * 3- Média de visualizações (quantidade de visualizações total / quantidade de vídeos)
+     */
+    @GetMapping("/estatisticas")
+    public Mono<Estatistica> estatisticas() {
+        return this.videoService.estatisticas();
+    }
 }
+
