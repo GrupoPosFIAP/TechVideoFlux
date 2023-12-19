@@ -30,15 +30,20 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package allure:report --file pom.xml
-    - name: Get Allure results for download
+    - name: Upload Allure-results
       uses: actions/upload-artifact@v3
       with:
-        name: allure/allure-results
-        path: target/allure-results
-    - name: Get Allure report for download
+        name: allure-results
+        path: /target/allure-results/
+    - name: Upload Allure report
       uses: actions/upload-artifact@v3
       with:
-        name: allure/allure-report
-        path: target/site
+        name: allure-report
+        path: /target/site/
+  
+  Generate_Allure_report:
+    runs-on: ubuntu-latest
+    steps:
+    
     - name: Download Allure files
       uses: actions/download-artifact@v3
