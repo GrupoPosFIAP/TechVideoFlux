@@ -29,4 +29,16 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -B package allure:report --file pom.xml
+    - name: Get Allure results for download
+      uses: actions/upload-artifact@v3
+      with:
+        name: allure/allure-results
+        path: target/allure-results
+    - name: Get Allure report for download
+      uses: actions/upload-artifact@v3
+      with:
+        name: allure/allure-report
+        path: target/site
+    - name: Download Allure files
+      uses: actions/download-artifact@v3
