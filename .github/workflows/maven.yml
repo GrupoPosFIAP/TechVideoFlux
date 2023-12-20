@@ -34,12 +34,12 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: allure-results
-        path: /target/allure-results/
+        path: /target/allure-results
     - name: Upload Allure report
       uses: actions/upload-artifact@v3
       with:
         name: allure-report
-        path: /target/site/
+        path: /target/site
   
   Generate_Allure_report:
     runs-on: ubuntu-latest
