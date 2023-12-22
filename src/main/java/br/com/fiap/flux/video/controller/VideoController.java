@@ -54,6 +54,40 @@ public class VideoController {
     }
 
 
+
+    /**
+     * --------------------------------------------------------------
+     * Ao salvar o favorito, incrementar o contador da entidade Video
+     * --------------------------------------------------------------
+     * Recuperar o vídeos da base (mongo -findById)
+     * Incrementar o contador de favoritos (vídeos)
+     * Adicionar na lista do usuário
+     * Persistir a entidade vídeo
+     * Persistir a entidade usuário (salvar somente o ID do vídeo)
+     * --------------------------------------------------------------
+     * Observação: Implentei a opção para desfavoritar um vídeo
+     * --------------------------------------------------------------
+     */
+    @PutMapping("/favoritar/{userId}/{videoId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> favoriteVideo(
+            @PathVariable(name = "UserId") String userId,
+            @PathVariable(name = "videoId") UUID videoId) {
+
+        return this.videoService.favoriteVideo(userId, videoId);
+    }
+
+    @PutMapping("/desfavoritar/{userId}/{videoId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> defavoriteVideo(
+            @PathVariable(name = "UserId") String userId,
+            @PathVariable(name = "videoId") UUID videoId) {
+
+        return this.videoService.defavoriteVideo(userId, videoId);
+    }
+
+
+
     /**
      * O Endpoint Estatísticas deve retornar:
      * 1- A quantidade total de vídeos (Count - findAll)
