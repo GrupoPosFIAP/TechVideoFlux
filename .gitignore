@@ -6,6 +6,7 @@ target/
 
 ### Allure ###
 .allure
+allure-results/
 
 ### STS ###
 .apt_generated

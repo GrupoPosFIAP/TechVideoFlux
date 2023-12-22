@@ -2,10 +2,12 @@ package br.com.fiap.flux.video.service.impl;
 
 import br.com.fiap.flux.builder.UserBuilder;
 import br.com.fiap.flux.builder.VideoBuilder;
+import br.com.fiap.flux.exception.EntityNotFoundException;
 import br.com.fiap.flux.user.domain.User;
 import br.com.fiap.flux.user.repository.UserRepository;
 import br.com.fiap.flux.video.domain.Estatistica;
 import br.com.fiap.flux.video.domain.Video;
+import br.com.fiap.flux.video.domain.VideoCriteria;
 import br.com.fiap.flux.video.repository.VideoRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,12 +16,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,8 +48,68 @@ public class VideoServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private ReactiveMongoTemplate mongoTemplate;
+
     private Video videoMockado = VideoBuilder.publicarVideo();
     private User userMockado = UserBuilder.cadastrarUser();
+
+    @Test
+    public void testFindAllVideos() {
+
+        when(mongoTemplate.find(any(), any())).thenReturn(Flux.just(List.of(videoMockado, videoMockado)));
+        when(videoRepository.count()).thenReturn(Mono.just(1L));
+
+        Mono<PageImpl<Video>> videos = this.videoService.findAll(Pageable.ofSize(25), new VideoCriteria());
+
+        PageImpl<Video> pageVideo = new PageImpl<>(videos.block().getContent(), videos.block().getPageable(), videos.block().getTotalElements());
+
+        StepVerifier.create(videos)
+                .expectNext(pageVideo)
+                .verifyComplete();
+    }
+
+    @Test
+    public void testFindVideoById() {
+        UUID videoId = UUID.randomUUID();
+        when(this.videoRepository.findById(videoId)).thenReturn(Mono.just(videoMockado));
+        StepVerifier.create(videoService.findById(videoId)).expectNext(videoMockado).verifyComplete();
+    }
+
+    @Test
+    public void expectErrorWhenNotFindVideo() {
+        UUID videoId = UUID.randomUUID();
+        when(this.videoRepository.findById(videoId)).thenReturn(Mono.empty());
+        StepVerifier.create(videoService.findById(videoId)).expectError(EntityNotFoundException.class).verify();
+    }
+
+    @Test
+    public void testSaveVideo() {
+        when(this.videoRepository.save(videoMockado)).thenReturn(Mono.just(videoMockado));
+        StepVerifier.create(videoService.insert(videoMockado)).expectNext(videoMockado).verifyComplete();
+    }
+
+    @Test
+    public void expectErrorWhenSaveNullVideo() {
+        when(this.videoRepository.save(videoMockado)).thenReturn(Mono.empty());
+        StepVerifier.create(videoService.insert(videoMockado)).expectError(EntityNotFoundException.class).verify();
+    }
+
+    @Test
+    public void testUpdateVideo() {
+        UUID videoId = UUID.randomUUID();
+        when(this.videoRepository.findById(videoId)).thenReturn(Mono.just(videoMockado));
+        when(this.videoRepository.save(videoMockado)).thenReturn(Mono.just(videoMockado));
+
+        StepVerifier.create(this.videoService.update(videoId, videoMockado)).expectComplete().verify();
+    }
+
+    @Test
+    public void testDeleteVideo() {
+        UUID videoId = UUID.randomUUID();
+        when(this.videoRepository.deleteById(videoId)).thenReturn(Mono.empty());
+        StepVerifier.create(this.videoService.delete(videoId)).expectComplete().verify();
+    }
 
     @Test
     public void testFavoriteVideo() {
