@@ -29,6 +29,14 @@ public class Video {
     private String url;
     private LocalDate dataPublicacao;
     private List<Category> categorias;
-    private Long contadorFavoritos;
-    private Long contadorVisualizacoes;
+    private Long contadorFavoritos = 0L;
+    private Long contadorVisualizacoes = 0L;
+
+    public void incrementarFavorito() {
+        this.contadorFavoritos++;
+    }
+
+    public void decrementarFavorito() {
+        this.contadorFavoritos--;
+    }
 }

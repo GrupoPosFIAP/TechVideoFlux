@@ -89,6 +89,21 @@ public class VideoServiceImpl implements VideoService {
         return ((VideoRepository) videoRepository).findByCategoriasIn(categories);
     }
 
+
+
+    /**
+     * --------------------------------------------------------------
+     * Ao salvar o favorito, incrementar o contador da entidade Video
+     * --------------------------------------------------------------
+     * Recuperar o vídeos da base (mongo -findById)
+     * Incrementar o contador de favoritos (vídeos)
+     * Adicionar na lista do usuário
+     * Persistir a entidade vídeo
+     * Persistir a entidade usuário (salvar somente o ID do vídeo)
+     * --------------------------------------------------------------
+     * Observação: Implentei a opção para desfavoritar um vídeo
+     * --------------------------------------------------------------
+     */
     @Override
     public Mono<Void> favoriteVideo(String userId, UUID videoId) {
         var user = userRepository
@@ -98,12 +113,40 @@ public class VideoServiceImpl implements VideoService {
         var video = findById(videoId);
 
         user = user.map(u -> {
-            u.getFavorites().add(video.block());
+            Video videoModel = video.block();
+            u.getFavorites().add(videoModel);
+            if (videoModel != null) {
+                videoModel.incrementarFavorito();
+            } else {
+                videoModel.setContadorFavoritos(Long.valueOf(1));
+            }
             return u;
         });
 
         user.subscribe(userRepository::save);
+        return Mono.empty();
+    }
 
+    @Override
+    public Mono<Void> defavoriteVideo(String userId, UUID videoId) {
+        var user = userRepository
+                .findById(userId)
+                .switchIfEmpty(Mono.error(EntityNotFoundException::new));
+
+        var video = findById(videoId);
+
+        user = user.map(u -> {
+            Video videoModel = video.block();
+            u.getFavorites().add(videoModel);
+            if (videoModel != null) {
+                videoModel.decrementarFavorito();
+            } else {
+                videoModel.setContadorFavoritos(Long.valueOf(0));
+            }
+            return u;
+        });
+
+        user.subscribe(userRepository::save);
         return Mono.empty();
     }
 
