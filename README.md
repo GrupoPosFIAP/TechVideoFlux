@@ -3,10 +3,10 @@
 
 ## Sobre
 ```
-- O Tech-video-flux é um serviço back-end de aplicação web de streaming de vídeos utilizando as
-tecnologias Spring e Postgres.
-- Disponibilizamos endpoints para que seja possível realizar o cadastro de Usuários e o cadastro
-de vídeos (com favoritos e estatísticas).
+- O Tech-video-flux é um serviço back-end de aplicação web de streaming de vídeos utilizando as tecnologias
+Spring e Postgres.
+- Disponibilizamos endpoints para que seja possível realizar o cadastro de Usuários e o cadastro de
+vídeos (com favoritos e estatísticas).
 - A solução foi implantada utilizando as tecnologias Spring/Postgres.
 ```
 
@@ -28,7 +28,7 @@ de vídeos (com favoritos e estatísticas).
 ## Como executar a aplicação
 ### Opção 1: Núvem
 ```
-- Acessar o swagger da aplicação: https://techvideoflux-fio6pykg2q-uc.a.run.app/swagger-ui/index.html
+- Acessar o swagger da aplicação: https://techvideoflux.com.br
 - Testar via Postman ou outra plataforma de requisições HTTP
 ```
 ### Opção 2: Local
@@ -42,7 +42,7 @@ de vídeos (com favoritos e estatísticas).
 * [Usuário](#Usuário)
 * [Vídeo](#Vídeo)
 
-- PS: Mais informações sobre os endpoints podem ser encontradas através do swagger da aplicação, disponibilizado através da url: https://techvideoflux-fio6pykg2q-uc.a.run.app/swagger-ui/index.html 
+- PS: Mais informações sobre os endpoints podem ser encontradas através do swagger da aplicação, disponibilizado através da url: https://techvideoflux.com.br/swagger-ui/index.html 
 
 ## Usuário
 
