@@ -3,8 +3,10 @@
 
 ## Sobre
 ```
-- O Tech-video-flux é um serviço back-end de aplicação web de streaming de vídeos utilizando as tecnologias Spring e Postgres.
-- Disponibilizamos endpoints para que seja possível realizar o cadastro de Usuários e o cadastro de vídeos (com favoritos e estatísticas).
+- O Tech-video-flux é um serviço back-end de aplicação web de streaming de vídeos utilizando as
+tecnologias Spring e Postgres.
+- Disponibilizamos endpoints para que seja possível realizar o cadastro de Usuários e o cadastro
+de vídeos (com favoritos e estatísticas).
 - A solução foi implantada utilizando as tecnologias Spring/Postgres.
 ```
 
