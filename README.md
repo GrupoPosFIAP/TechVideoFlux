@@ -88,6 +88,7 @@ necessário e enviá-lo como corpo da requisição POST para o endpoint /Usuári
     Após enviar a requisição, você receberá a seguinte resposta:  
 ```sh
 {
+    "id": 1
     "createdBy": "José da Silva",
     "createdDate": "2024-01-15",
     "updatedBy": "josé da Silva",
@@ -110,6 +111,7 @@ Essa rota faz a consulta de Usuário pelo id:
     Após enviar a requisição, você receberá a seguinte resposta:  
 ```sh
 {
+    "id": 1
     "createdBy": "José da Silva",
     "createdDate": "2024-01-15",
     "updatedBy": "josé da Silva",
@@ -149,6 +151,7 @@ Você pode utilizar o seguinte JSON como exemplo para atualizar um Usuário:
     Após enviar a requisição, você receberá a seguinte resposta:  
 ```sh
 {
+    "id": 1
     "createdBy": "José da Silva",
     "createdDate": "2024-01-16",
     "updatedBy": "José da Silva",
@@ -226,7 +229,7 @@ contadorVizualizações | Informa a quantidade de vizualizações do vídeo
     "dataPublicacao": "2024-01-15", 
     "categorias": "Back end", 
     "contadorFavoritos": 0,
-    "contadorVisualizacoes": 0
+    "contadorVisualizacoes": 1
 }
 ```
 
@@ -248,7 +251,7 @@ contadorVizualizações | Informa a quantidade de vizualizações do vídeo
     "dataPublicacao": "2024-01-16", 
     "categorias": "Sistemas Operacionais", 
     "contadorFavoritos": 0,
-    "contadorVisualizacoes": 0
+    "contadorVisualizacoes": 1
 }
 ```
 
@@ -264,7 +267,7 @@ contadorVizualizações | Informa a quantidade de vizualizações do vídeo
     "dataPublicacao": "2024-01-16", 
     "categorias": "Sistemas Operacionais", 
     "contadorFavoritos": 0,
-    "contadorVisualizacoes": 0
+    "contadorVisualizacoes": 2
 }
 ```
 
