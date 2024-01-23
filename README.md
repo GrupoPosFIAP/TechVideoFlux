@@ -13,30 +13,21 @@ vídeos (com favoritos e estatísticas).
 ## Tecnologias adotadas
 ```
 -Java 17: programação server-side
--Spring 3: criação API Restfull e serviços
-#-Swagger/OpenAPI: Utilizado para criar a documentação dos endpoints
+-Spring 3: criação API Restful e serviços
 -Docker: Gerar a imagem da aplicação
 -PostgresSQL: Banco utilizado para persistir os dados (está dentro do Google Cloud SQL)
 -DBeaver: Front-End para o SGBD
 -PostMan: Utilizado nos testes dos endpoints
-#-Google Cloud Run: Utilizado para disponibilizar a aplicação de maneira escalável (serverless)
-#-Google Cloud SQL: Utilizado para disponibilizar o banco de dados que a aplicação utiliza para persistir os dados.
-#-Google Cloud Artifact Registry: Utilizado para armazenar as imagens Docker da aplicação que são geradas.
-#-Github Actions: Utilizado para realizar o CD (Continuous Deployment) do projeto Tech-video-flux. 
+-Github Actions: Utilizado para realizar o CI (Continuous Integration) do projeto Tech-video-flux. 
 ```
 
 ## Como executar a aplicação
-### Opção 1: Núvem
+### Local
 ```
-- Acessar o swagger da aplicação: https://techvideoflux.com.br
+- Utiliozar o README do projeto como documentação dos endpoints
 - Testar via Postman ou outra plataforma de requisições HTTP
 ```
-### Opção 2: Local
-```
-- Clonar o repositório https://github.com/GrupoPosFIAP/TechVideoFlux
-- Entrar na pasta raiz do projeto e executar o comando "mvn spring-boot:run"
-- Testar via Postman ou outra plataforma de requisições HTTP
-```
+
 
 ## Endpoints
 * [Usuário](#Usuário)
