@@ -110,7 +110,7 @@ public class VideoServiceImpl implements VideoService {
      */
     @Override
     public Mono<Void> favoriteVideo(String userId, UUID videoId) {
-        return userRepository
+        userRepository
                 .findById(userId)
                 .switchIfEmpty(Mono.error(EntityNotFoundException::new))
                 .flatMap(user -> {
@@ -123,6 +123,10 @@ public class VideoServiceImpl implements VideoService {
                 })
                 .flatMap(userRepository::save)
                 .then();
+        return videoRepository.findById(videoId).flatMap(video -> {
+            video.incrementarFavorito();
+            return videoRepository.save(video);
+        }).then();
     }
 
     @Override

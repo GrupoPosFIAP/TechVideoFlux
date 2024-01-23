@@ -168,4 +168,38 @@ public class VideoServiceImplTest {
                         && estatistica.getMediaVisualizacoes() == 0)
                 .verifyComplete();
     }
+
+    @Test
+    public void testAssistirVideo() {
+
+        // Criar IDs de exemplo
+        UUID videoId = UUID.randomUUID();
+
+        // Mock do VideoRepository
+        when(videoRepository.findById(videoId)).thenReturn(Mono.just(videoMockado));
+        when(videoRepository.save(any(Video.class))).thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
+
+        // Chamar o método e verificar o resultado
+        Mono<Void> result = videoService.assistirVideo(videoId);
+
+        // Verificar se o vídeo foi assistido
+        assertEquals(Long.valueOf(2), videoMockado.getContadorVisualizacoes());
+    }
+
+    @Test
+    public void testRecommendations() {
+
+        // Criar IDs de exemplo
+        UUID userId = UUID.randomUUID();
+
+        // Mock do UserRepository
+        when(userRepository.findById(String.valueOf(userId))).thenReturn(Mono.just(userMockado));
+        when(videoRepository.findByCategoriasIn(any())).thenReturn(Flux.empty());
+
+        // Chamar o método e verificar o resultado
+        Flux<Video> result = videoService.recommendations(userId.toString());
+
+        // Verificar se o resultado é vazio
+        StepVerifier.create(result).expectNextCount(0).verifyComplete();
+    }
 }
