@@ -6,22 +6,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import br.com.fiap.flux.video.domain.Estatistica;
 import br.com.fiap.flux.video.domain.Video;
 import br.com.fiap.flux.video.domain.VideoCriteria;
 import br.com.fiap.flux.video.service.VideoService;
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
@@ -78,11 +70,11 @@ public class VideoController {
      * Observação: Implentei a opção para desfavoritar um vídeo
      * --------------------------------------------------------------
      */
-    @PutMapping("/favoritar/{userId}/{videoId}")
+    @PatchMapping("/favoritar/{userId}/{videoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> favoriteVideo(
-            @PathVariable(name = "UserId") String userId,
-            @PathVariable(name = "videoId") UUID videoId) {
+            @PathVariable String userId,
+            @PathVariable UUID videoId) {
 
         return this.videoService.favoriteVideo(userId, videoId);
     }
@@ -90,8 +82,8 @@ public class VideoController {
     @PutMapping("/desfavoritar/{userId}/{videoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> defavoriteVideo(
-            @PathVariable(name = "UserId") String userId,
-            @PathVariable(name = "videoId") UUID videoId) {
+            @PathVariable String userId,
+            @PathVariable UUID videoId) {
 
         return this.videoService.defavoriteVideo(userId, videoId);
     }
@@ -108,5 +100,18 @@ public class VideoController {
     public Mono<Estatistica> estatisticas() {
         return this.videoService.estatisticas();
     }
+
+
+    @PatchMapping("/assistir/{videoId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> assistirVideo(@PathVariable UUID videoId) {
+        return this.videoService.assistirVideo(videoId);
+    }
+
+    @GetMapping("/recomendacoes/{userId}")
+    public Flux<Video> recommendations(@PathVariable String userId) {
+        return this.videoService.recommendations(userId);
+    }
+
 }
 

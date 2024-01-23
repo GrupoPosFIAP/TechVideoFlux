@@ -3,6 +3,7 @@ package br.com.fiap.flux.user.domain;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import br.com.fiap.flux.enums.Category;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
@@ -19,6 +20,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import reactor.core.publisher.Flux;
 
 @Data
 @Getter
@@ -56,4 +58,8 @@ public class User {
     private String email;
 
     private List<Video> favorites;
+
+    public Flux<Category> getCategorias() {
+        return Flux.fromStream(favorites.stream().flatMap(video -> video.getCategorias().stream()));
+    }
 }

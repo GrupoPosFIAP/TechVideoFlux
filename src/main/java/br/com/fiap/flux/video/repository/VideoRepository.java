@@ -2,6 +2,8 @@ package br.com.fiap.flux.video.repository;
 
 import java.util.UUID;
 
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,4 +20,5 @@ public interface VideoRepository extends ReactiveMongoRepository<Video, UUID> {
     Mono<Long> countByContadorFavoritosGreaterThan(Long quantity);
 
     Mono<Long> countAllByContadorVisualizacoes();
+
 }

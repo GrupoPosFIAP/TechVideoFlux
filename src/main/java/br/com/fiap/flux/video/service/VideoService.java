@@ -4,6 +4,7 @@ import br.com.fiap.flux.video.domain.Estatistica;
 import br.com.fiap.flux.video.domain.Video;
 import br.com.fiap.flux.video.domain.VideoCriteria;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -29,4 +30,7 @@ public interface VideoService {
     Flux<Video> recommendations(String userId);
 
     Mono<Estatistica> estatisticas();
+
+    Mono<Void> assistirVideo(UUID videoId);
+
 }

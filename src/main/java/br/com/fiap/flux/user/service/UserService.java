@@ -1,5 +1,6 @@
 package br.com.fiap.flux.user.service;
 
+import br.com.fiap.flux.video.domain.Video;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

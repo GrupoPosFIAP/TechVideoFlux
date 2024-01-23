@@ -16,8 +16,12 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
+import java.util.Comparator;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
@@ -106,25 +110,19 @@ public class VideoServiceImpl implements VideoService {
      */
     @Override
     public Mono<Void> favoriteVideo(String userId, UUID videoId) {
-        var user = userRepository
+        return userRepository
                 .findById(userId)
-                .switchIfEmpty(Mono.error(EntityNotFoundException::new));
-
-        var video = findById(videoId);
-
-        user = user.map(u -> {
-            Video videoModel = video.block();
-            u.getFavorites().add(videoModel);
-            if (videoModel != null) {
-                videoModel.incrementarFavorito();
-            } else {
-                videoModel.setContadorFavoritos(Long.valueOf(1));
-            }
-            return u;
-        });
-
-        user.subscribe(userRepository::save);
-        return Mono.empty();
+                .switchIfEmpty(Mono.error(EntityNotFoundException::new))
+                .flatMap(user -> {
+                    return findById(videoId)
+                            .map(videoModel -> {
+                                user.getFavorites().add(videoModel);
+                                videoModel.incrementarFavorito();
+                                return user;
+                            });
+                })
+                .flatMap(userRepository::save)
+                .then();
     }
 
     @Override
@@ -178,5 +176,17 @@ public class VideoServiceImpl implements VideoService {
             return estatistica;
         });
 
+    }
+
+    @Override
+    public Mono<Void> assistirVideo(UUID videoId) {
+        return findById(videoId).flatMap(foundedVideo -> {
+            if (foundedVideo.getContadorVisualizacoes() == null) {
+                foundedVideo.setContadorVisualizacoes(Long.valueOf(1));
+            } else{
+                foundedVideo.setContadorVisualizacoes(foundedVideo.getContadorVisualizacoes() + 1);
+            }
+            return this.videoRepository.save(foundedVideo);
+        }).then();
     }
 }
