@@ -318,6 +318,13 @@ contadorVizualizações | Informa a quantidade de vizualizações do vídeo
     "mediaVisualizacoes": 7 
 }
 ```
+* Rota PATCH : http://localhost:8080/videos/assistir/{videoId}
+
+  Informa que o vídeo foi visualizado.
+
+* Rota GET : http://localhost:8080/videos/recomendacoes/{userId}
+
+  Retorna lista de vídeos recomendados para o usuário informado via id.
 
 
 ## Escalabilidade horizontal:

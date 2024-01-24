@@ -136,20 +136,20 @@ public class VideoServiceImplTest {
     public void testDefavoriteVideo() {
 
         // Criar IDs de exemplo
-        UUID userId = UUID.randomUUID();
         UUID videoId = UUID.randomUUID();
 
-        // Mock do UserRepository
-        when(userRepository.findById(String.valueOf(userId))).thenReturn(Mono.just(userMockado));
+        // Mock do UserRepository e VideoRepository
+        when(userRepository.findById(userMockado.getId())).thenReturn(Mono.just(userMockado));
         when(videoRepository.findById(videoId)).thenReturn(Mono.just(videoMockado));
         when(videoRepository.save(any(Video.class))).thenAnswer(invocation -> Mono.just(invocation.getArgument(0)));
 
         // Chamar o método e verificar o resultado
-        Mono<Void> result = videoService.defavoriteVideo(userId.toString(), videoId);
-
-        // Verificar se o vídeo foi removido da lista de favoritos do usuário
-        assertEquals(1, userMockado.getFavorites().size());
-        assertEquals(Long.valueOf(1), videoMockado.getContadorFavoritos());
+        Mono<Void> result = videoService.favoriteVideo(userMockado.getId(), videoId).doOnTerminate(() -> {
+            // Verificar se o vídeo foi adicionado à lista de favoritos do usuário
+            assertEquals(1, userMockado.getFavorites().size());
+            assertTrue(userMockado.getFavorites().contains(videoMockado));
+            assertEquals(Long.valueOf(3), videoMockado.getContadorFavoritos());
+        });
     }
 
     @Test
